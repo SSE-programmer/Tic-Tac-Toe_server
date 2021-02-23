@@ -53,11 +53,17 @@ public class Server {
         server.waitConnect();
         server.connectToOtherServers();
 
+        boolean reservFlag = false;
+
         while(true) {
             do {
-                System.out.println(ConsoleColors.GREEN_BOLD
-                        + "Это резервный сервер."
-                        + ConsoleColors.RESET);
+                if (!reservFlag) {
+                    System.out.println(ConsoleColors.GREEN_BOLD
+                            + "Это резервный сервер."
+                            + ConsoleColors.RESET);
+
+                    reservFlag = true;
+                }
 
                 try {
                     Thread.sleep(2000);
@@ -65,6 +71,9 @@ public class Server {
                     exception.printStackTrace();
                 }
             } while (!server.isGeneralServer());
+
+
+            reservFlag = false;
 
             System.out.println(ConsoleColors.GREEN_BOLD
                     + "Это главный сервер."
