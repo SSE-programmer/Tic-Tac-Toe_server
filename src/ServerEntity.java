@@ -58,11 +58,24 @@ public class ServerEntity {
                 connectionList.get(i).out.writeUTF(message);
                 connectionList.get(i).out.flush();
 
-                System.out.println("Сообщение: " + message + " отправлено серверу "
-                        + connectionList.get(i).socket.getPort() + ";");
+                System.out.println(ConsoleColors.YELLOW
+                        + "Сообщение: "
+                        + ConsoleColors.RESET
+                        + message
+                        + ConsoleColors.YELLOW
+                        + " отправлено серверу "
+                        + connectionList.get(i).socket.getPort() + ";"
+                        + ConsoleColors.RESET);
+
             } catch (IOException ioException) {
-                System.out.println("Сообщение: " + message + " не удалось отправить серверу "
-                        + connectionList.get(i).socket.getPort() + ";");
+                System.out.println(ConsoleColors.RED_BOLD
+                        + "Сообщение: "
+                        + ConsoleColors.RESET
+                        + message
+                        + ConsoleColors.RED_BOLD
+                        + " не удалось отправить серверу "
+                        + connectionList.get(i).socket.getPort() + ";"
+                        + ConsoleColors.RESET);
 
                 closeSocket(connectionList.get(i));
 
@@ -105,18 +118,24 @@ public class ServerEntity {
                     String msg = null;
 
                     try {
-                        System.out.println("Чтение данных с порта " +
-                                socket.socket.getPort() + ";");
+                        System.out.println(ConsoleColors.YELLOW_BOLD
+                                + "Чтение данных с порта " +
+                                socket.socket.getPort() + ";"
+                                + ConsoleColors.RESET);
 
                         msg = socket.in.myReadUTF();
 
                         if (msg != null) {
-                            System.out.println("Получено сообщение от другого сервера: " + msg + ".");
+                            System.out.println(ConsoleColors.YELLOW_BOLD
+                                    + "Получено сообщение от другого сервера: " + msg + "."
+                                    + ConsoleColors.RESET);
 
                             parseMSG(msg, socket);
                         }
                     } catch (IOException e) {
-                        System.out.println("Не удалось корректно принять данные от главного сервера. Соединение с ним будет закрыто.");
+                        System.out.println(ConsoleColors.RED_BOLD
+                                + "Не удалось корректно принять данные от главного сервера. Соединение с ним будет закрыто."
+                                + ConsoleColors.RESET);
                             closeSocket(socket);
                     }
                 }
@@ -152,7 +171,9 @@ public class ServerEntity {
         if (args.length == 4) {
             gameboard.setCurrentMove(args[1].charAt(0));
             if (gameboard.setBoard(args[3]) == false) {
-                System.out.println("Получены битые данные от главного сервера.");
+                System.out.println(ConsoleColors.RED_BOLD
+                        + "Получены битые данные от главного сервера."
+                        + ConsoleColors.RESET);
 
                 return false;
             }
@@ -169,8 +190,12 @@ public class ServerEntity {
             clientsSocket = new ServerSocket(port - 100);
             serversSocket = new ServerSocket(port);
 
-            System.out.println("Создан сервер.\n\tПорт для серверов: "
-                    + port + ".\n\tПорт для клиентов: " + (port - 100));
+            System.out.println(ConsoleColors.GREEN_BOLD
+                    + "Создан сервер."
+                    + ConsoleColors.GREEN
+                    + "\n\tПорт для серверов: "
+                    + port + ".\n\tПорт для клиентов: " + (port - 100)
+                    + ConsoleColors.RESET);
 
             return 0;
         } catch (IOException e) {
@@ -205,8 +230,10 @@ public class ServerEntity {
                         strSocket.out = new DataOutputStream(tempSocket.getOutputStream());
                         strSocket.in = new MyDataInputStream(tempSocket.getInputStream());
 
-                        System.out.println("Сервер подключился к серверу: "
-                                + strSocket.socket.getPort() + ".");
+                        System.out.println(ConsoleColors.YELLOW_BOLD
+                                +"Сервер подключился к серверу: "
+                                + strSocket.socket.getPort() + "."
+                                + ConsoleColors.RESET);
 
                         strSocket.online = true;
 
@@ -219,7 +246,6 @@ public class ServerEntity {
                                 }
                             }
                         }
-                        sendToAnotherServers("port/" + getServersPort());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -248,14 +274,18 @@ public class ServerEntity {
 
                                 socketsCList[i].online = true;
 
-                                System.out.println("Каналы ввода и вывода инициализированны.");
+                                System.out.println(ConsoleColors.YELLOW_BOLD
+                                        + "Каналы ввода и вывода инициализированны."
+                                        + ConsoleColors.RESET);
 
                                 listenServer(socketsCList[i]);
                             }
                         } catch (UnknownHostException e) {
-                            System.out.println("Не удалось определить IP адрес сервера: "
+                            System.out.println(ConsoleColors.RED_BOLD
+                                    + "Не удалось определить IP адрес сервера: "
                                     + ServersAddresses.Addresses[i][0] + "-"
-                                    + ServersAddresses.Addresses[i][1]);
+                                    + ServersAddresses.Addresses[i][1]
+                                    + ConsoleColors.RESET);
 
                             closeSocket(socketsCList[i]);
                         } catch (IOException e) {
@@ -281,15 +311,19 @@ public class ServerEntity {
         if (mySocket == null) return false;
 
         if (mySocket != null && mySocket.socket != null) {
-            System.out.println("\tЗакрытие сокета " + mySocket.socket.getInetAddress().getHostAddress()
-                    + "-" + mySocket.socket.getPort() + "...");
+            System.out.println(ConsoleColors.RED
+                    + "\tЗакрытие сокета " + mySocket.socket.getInetAddress().getHostAddress()
+                    + "-" + mySocket.socket.getPort() + "..."
+                    + ConsoleColors.RESET);
 
             if (mySocket.in != null) {
                 try {
                     mySocket.in.close();
                     mySocket.in = null;
 
-                    System.out.println("\tЗакрыт канал ввода.");
+                    System.out.println(ConsoleColors.RED
+                            + "\tЗакрыт канал ввода."
+                            + ConsoleColors.RESET);
                 } catch (IOException exception) {
                     exception.printStackTrace();
 
@@ -302,7 +336,9 @@ public class ServerEntity {
                     mySocket.out.close();
                     mySocket.out = null;
 
-                    System.out.println("\tЗакрыт канал вывода.");
+                    System.out.println(ConsoleColors.RED
+                            + "\tЗакрыт канал вывода."
+                            + ConsoleColors.RESET);
                 } catch (IOException exception) {
                     exception.printStackTrace();
 
@@ -315,7 +351,9 @@ public class ServerEntity {
                     mySocket.socket.close();
                     mySocket.socket = null;
 
-                    System.out.println("\tЗакрыт сокет.");
+                    System.out.println(ConsoleColors.RED
+                            + "\tЗакрыт сокет."
+                            + ConsoleColors.RESET);
                 } catch (IOException exception) {
                     exception.printStackTrace();
 
@@ -338,7 +376,9 @@ public class ServerEntity {
             try {
                 serversSocket.close();
 
-                System.out.println("Закрыт серверный сокет для серверов.");
+                System.out.println(ConsoleColors.YELLOW_BOLD
+                        + "Закрыт серверный сокет для серверов."
+                        + ConsoleColors.RESET);
             } catch (IOException exception) {
                 exception.printStackTrace();
 
@@ -350,7 +390,9 @@ public class ServerEntity {
             try {
                 clientsSocket.close();
 
-                System.out.println("Закрыт серверный сокет для клиентов.");
+                System.out.println(ConsoleColors.YELLOW_BOLD
+                        + "Закрыт серверный сокет для клиентов."
+                        + ConsoleColors.RESET);
             } catch (IOException exception) {
                 exception.printStackTrace();
 

@@ -20,7 +20,9 @@ public class Server {
         }
 
         if (!server.isServerInitialized()) {
-            System.out.println("Невозможно запустить сервер - все доступные порты уже заняты.");
+            System.out.println(ConsoleColors.RED_BOLD
+                    + "Невозможно запустить сервер - все доступные порты уже заняты."
+                    + ConsoleColors.RESET);
 
             return false;
         }
@@ -53,7 +55,9 @@ public class Server {
 
         while(true) {
             do {
-                System.out.println("Это резервный сервер.");
+                System.out.println(ConsoleColors.GREEN_BOLD
+                        + "Это резервный сервер."
+                        + ConsoleColors.RESET);
 
                 try {
                     Thread.sleep(2000);
@@ -62,9 +66,9 @@ public class Server {
                 }
             } while (!server.isGeneralServer());
 
-
-            System.out.println("Это главный сервер.");
-
+            System.out.println(ConsoleColors.GREEN_BOLD
+                    + "Это главный сервер."
+                    + ConsoleColors.RESET);
             boolean successRestore = false;
             for (int i = 0; i < 2; i++) {
                 if (players[i].connection == false)
@@ -82,7 +86,9 @@ public class Server {
             }
 
             while (players[0].connection && players[1].connection) {
-                System.out.println("\nИгровое поле на сервере: " + gameboard.toString());
+                System.out.println(ConsoleColors.YELLOW_BOLD
+                        + "\nИгровое поле на сервере: " + gameboard.toString()
+                        + ConsoleColors.RESET);
 
                 char win = gameboard.getWinner();
 
@@ -106,6 +112,19 @@ public class Server {
 
                 if (win != '_') {
                     newGame();
+                    for (int i = 0; i < 2; i++) {
+                        message[i] = new StringBuffer("");
+                        message[i].append(players[i].getPlayerType());
+                        message[i].append("/");
+                        message[i].append(gameboard.currentMove());
+                        message[i].append("/");
+                        message[i].append("_");
+                        message[i].append("/");
+                        message[i].append("_________");
+                        message[i].append("/");
+
+                        server.sendToAnotherServers(message[i].substring(0));
+                    }
                     break;
                 }
 

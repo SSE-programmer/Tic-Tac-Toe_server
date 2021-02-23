@@ -39,7 +39,9 @@ public class GameLogic {
                 }
             }
         } else {
-            System.out.println("Получен неверный формат состояния ячеек.");
+            System.out.println(ConsoleColors.RED_BOLD
+                    + "Получен неверный формат состояния ячеек."
+                    + ConsoleColors.RESET);
 
             return false;
         }
@@ -73,12 +75,16 @@ public class GameLogic {
                 changeActivePlayer();
 
             } catch (NumberFormatException e) {
-                System.out.println("Полученны неккоректные координаты хода.");
+                System.out.println(ConsoleColors.RED_BOLD
+                        + "Полученны неккоректные координаты хода."
+                        + ConsoleColors.RESET);
 
                 return false;
             }
         } else {
-            System.out.println("Полученны неккоректные координаты хода.");
+            System.out.println(ConsoleColors.RED_BOLD
+                    + "Полученны неккоректные координаты хода."
+                    + ConsoleColors.RESET);
 
             return false;
         }
